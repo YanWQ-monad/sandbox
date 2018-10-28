@@ -28,6 +28,11 @@ $(TARGET): $(OBJS)
 %.d: %.cpp
 	$(CXX) $< -MM -MT'$*.o' -MT'$@' -MG -MP -MF'$@' $(CXXFLAGS) $(CFLAGS)
 
+.PHONY: lint
+lint: cpplint.py
+	-@./cpplint.py --filter=-legal/copyright --root=. --verbose=0 $(SOURCES) $(HEADERS)
+	-@./cpplint.py --filter=-whitespace/line_length,-legal/copyright --root=. ./python_module.cpp
+
 .PHONY: py_module
 py_module:
 	python3 setup.py build
