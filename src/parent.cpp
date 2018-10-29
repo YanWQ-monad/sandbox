@@ -11,8 +11,6 @@
 #include <cstdlib>
 #include <cstring>
 
-#include <cstdio>
-
 #include "src/exception.h"
 #include "src/runner.h"
 
@@ -43,19 +41,18 @@ SandboxResult parent_process(
     const pid_t child_pid,
     const timeval start_time) {
   pthread_t killer_tid = 0;
+  KillerArgument *killer_arg =
+    static_cast<KillerArgument*>(malloc(sizeof(KillerArgument)));
 
   if (config.max_real_time != UNLIMITED) {
-    KillerArgument *killer_arg =
-      static_cast<KillerArgument*>(malloc(sizeof(KillerArgument)));
     killer_arg->pid = child_pid;
     killer_arg->timeout = config.max_real_time;
     if (pthread_create(&killer_tid, NULL, killer,
-                       static_cast<void*>(&killer_arg))) {
+                       reinterpret_cast<void*>(killer_arg))) {
       auto error = errno;
       kill(child_pid, SIGKILL);
       throw SandboxException(kPthreadFailed, error);
     }
-    free(killer_arg);
   }
 
   int status;
@@ -77,6 +74,7 @@ SandboxResult parent_process(
 
   if (killer_tid)
     pthread_cancel(killer_tid);
+  free(killer_arg);
 
   if (WIFSIGNALED(status))
     result.signal = WTERMSIG(status);
@@ -94,14 +92,14 @@ SandboxResult parent_process(
 
     if (config.max_memory != UNLIMITED && result.memory > config.max_memory) {
       result.result = kMemoryExceeded;
-    } else if (result.signal) {
-      result.result = kRuntimeError;
     } else if (config.max_cpu_time != UNLIMITED &&
         result.cpu_time > config.max_cpu_time) {
       result.result = kTimeLimitExceeded;
     } else if (config.max_real_time != UNLIMITED &&
         result.real_time > config.max_real_time) {
       result.result = kRealTimeLimitExceeded;
+    } else if (result.signal) {
+      result.result = kRuntimeError;
     }
   }
 

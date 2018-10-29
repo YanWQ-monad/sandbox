@@ -49,7 +49,7 @@ void set_one_rlimit(const int type, const auto value) {
 
 void set_rlimits(const SandboxConfig &config) {
   set_one_rlimit(RLIMIT_STACK, config.max_stack);
-  set_one_rlimit(RLIMIT_CPU, config.max_cpu_time / 1000);
+  set_one_rlimit(RLIMIT_CPU, (config.max_cpu_time + 1000) / 1000);
   set_one_rlimit(RLIMIT_NPROC, config.max_process_number);
   set_one_rlimit(RLIMIT_FSIZE, config.max_output_size);
 
