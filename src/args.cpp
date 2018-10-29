@@ -48,7 +48,7 @@ SandboxConfig parse_args(const int argc, char *argv[]) {
 
   SandboxConfig config;
 
-  for (int i=0; i<ARGS_MAX_NUMBER; i++)
+  for (int i=0; i < ARGS_MAX_NUMBER; i++)
     config.args[i] = nullptr;
 
   config.max_cpu_time = opts.parse_int("--max_cpu_time", UNLIMITED);

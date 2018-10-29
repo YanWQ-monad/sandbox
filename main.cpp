@@ -19,7 +19,7 @@ int main(int argc, char *argv[]) {
     fprintf(stderr, "Errno: %d (%s)\n", e.errno_, strerror(e.errno_));
     exit(EXIT_FAILURE);
   }
-  
+
   puts("");
   printf("Result    : %d\n", result.result);
   printf("CPU Time  : %dms\n", result.cpu_time);

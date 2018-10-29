@@ -13,7 +13,6 @@ class ProgramOptions {
   int find_key(const char *key) const;
 
  private:
-
   int argc_;
   char const* const* argv_;
 };
