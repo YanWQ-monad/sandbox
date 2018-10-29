@@ -1,0 +1,25 @@
+sudo: required
+dist: trusty
+
+branches:
+  only:
+  - master
+  - develop
+  - /^v\d+\.\d+(\.\d+)?(-\S*)?$/
+
+language: cpp
+python:
+  - "3.6"
+
+before_install:
+  - sudo apt-get update
+  - sudo apt-get install python3-dev libseccomp-dev
+
+install:
+  - make
+  - make py_module
+  - sudo make install
+
+script:
+  - make lint
+  - sudo make test
