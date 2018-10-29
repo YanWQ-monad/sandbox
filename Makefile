@@ -5,7 +5,7 @@ LDLIBS := -lseccomp -lpthread
 TARGET = sandbox
 SOURCES =\
 	$(filter-out ./python_module.cpp,\
-	$(shell find $(SOURCEDIR) -name '*.cpp'))
+	$(shell find $(SOURCEDIR) -name '*.cpp' | grep -v 'test/.*'))
 HEADERS = $(shell find $(SOURCEDIR) -name '*.h')
 OBJS = $(addsuffix .o, $(basename $(SOURCES)))
 
@@ -32,6 +32,14 @@ $(TARGET): $(OBJS)
 lint: cpplint.py
 	-@./cpplint.py --filter=-legal/copyright --root=. --verbose=0 $(SOURCES) $(HEADERS)
 	-@./cpplint.py --filter=-whitespace/line_length,-legal/copyright --root=. ./python_module.cpp
+
+.PHONY: check_py_module
+check_py_module:
+	python3 -c 'import sandbox'
+
+.PHONY: test
+test: check_py_module
+	$(MAKE) -C test test
 
 .PHONY: py_module
 py_module:
