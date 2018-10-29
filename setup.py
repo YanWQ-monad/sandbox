@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from distutils.core import setup, Extension
+from setuptools import setup, Extension
 
 modulel = Extension(
 	'sandbox',

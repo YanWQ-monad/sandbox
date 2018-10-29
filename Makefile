@@ -44,6 +44,7 @@ test: check_py_module
 .PHONY: py_module
 py_module:
 	python3 setup.py build
+	python3 setup.py bdist_wheel --universal
 
 .PHONY: install
 install: py_module

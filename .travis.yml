@@ -30,7 +30,8 @@ matrix:
 before_install:
   - eval "${MATRIX_EVAL}"
   - sudo apt-get update
-  - sudo apt-get install python3-dev libseccomp-dev
+  - sudo apt-get install python3-pip python3-dev libseccomp-dev
+  - pip install --user setuptools wheel
 
 install:
   - make
@@ -40,3 +41,14 @@ install:
 script:
   - make lint
   - sudo make test
+
+deploy:
+  provider: releases
+  api_key:
+    secure: EmK2VwdjsiajKxpwU3GoY8Jz8Sk9n6XTYvD401qK8y64IcWcPnEEArrglh5oRO022HVg5hbiK4u4k/ewXj3cBYHz/E5LQ2h5asP90QY4n3Z2SNNt20sYiWDSgf8yA4UVRE5aZFAzYh+iQd0xFEJbhXsc1RCnzgMU6qo8whxh5vv/2AkSxwQEjLr8SgPNqA/eo3QZQ/EXeOf9sgh1g3JtiDLiEZQktajWUbZgZ5k2nTXEsrWeEzSXY0AqqrxjtxPgGmeMEyd1mrKisFyQ+MCoDotgF9Yc9QbZOLr4i2Ln3mAeStKtXbIxLBcluHwqCVZIRILo+UUhACf+WkqbEad5fdhebdz4UKlUJvE7RnyWckYZiLo/jCxA130hBhrtnBM8fh2u0bR+pXiJSSeI0Gp/Kd9M/dKP0YSf9l967ta/FvDNEciKPMYCJBmQuAf88v2lal84mu6wJdadGNRCjkcPqu/lTNmwDGdmXQGPysKM2UlYEPoNozrM6CkbIYwZc0rIBgdnXSV3urYOklbI588cjrosD5RuZNBJ8hTRiM/JUzVYeI3Qbrv2qc7H1V/NZC7eqpCrgpPvaJhkRI2BXO5wGWrnrmYNp20EJBPvMoWFhf7I7UsjccUqYL0uImb+V/yREOHkg/s50JF+8TUTchUScWw24MFBmw9+5oPaOmLyf+M=
+  file: dist/*.whl
+  file_glob: true
+  skip_cleanup: true
+  on:
+    repo: YanWQ-monad/sandbox
+    tags: true
