@@ -13,7 +13,7 @@ modulel = Extension(
 
 setup(
 	name='sandbox',
-	version='1.0',
+	version='1.1.0',
 	description='Run application in sandbox',
 	author='Monad',
 	author_email='YanWQmonad@gmail.com',
