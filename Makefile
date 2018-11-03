@@ -53,3 +53,5 @@ install: py_module
 .PHONY: clean
 clean:
 	-rm *.o *.d src/*.o src/*.d
+	-rm -r dist build sandbox.egg-info
+	$(MAKE) -C test clean
