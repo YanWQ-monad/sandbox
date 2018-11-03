@@ -58,11 +58,11 @@ SandboxConfig parse_args(const int argc, char *argv[]) {
   config.max_stack = opts.parse_int("--max_stack", UNLIMITED);
   config.max_process_number = opts.parse_int("--max_process_number", UNLIMITED);
   config.max_output_size = opts.parse_int("--max_output_size", UNLIMITED);
-  config.chroot_path = opts.parse_string("--chroot_path");
-  config.exe_path = opts.parse_string("--exe_path");
-  config.input_path = opts.parse_string("--input_path");
-  config.output_path = opts.parse_string("--output_path");
-  config.error_path = opts.parse_string("--error_path");
+  config.chroot = opts.parse_string("--chroot");
+  config.target = opts.parse_string("--target");
+  config.stdin = opts.parse_string("--stdin");
+  config.stdout = opts.parse_string("--stdout");
+  config.stderr = opts.parse_string("--stderr");
   config.uid = opts.parse_int("--uid", 0);
   config.gid = opts.parse_int("--gid", 0);
   config.seccomp_rule =
@@ -70,10 +70,10 @@ SandboxConfig parse_args(const int argc, char *argv[]) {
   opts.copy_extra_args(
       config.args,
       sizeof(config.args) / sizeof(config.args[0]));
-  config.args[0] = config.exe_path;
+  config.args[0] = config.target;
 
-  if (config.exe_path == nullptr) {
-    puts("Missing args: exe_path");
+  if (config.target == nullptr) {
+    puts("Missing args: target");
     exit(1);
   }
 

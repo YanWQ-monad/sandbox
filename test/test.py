@@ -22,14 +22,14 @@ class SandboxTest(unittest.TestCase):
 
     def test_stdout(self):
         stdout = os.path.join(self.directory, 'stdout.txt')
-        result = sandbox.run('test_stdout', output_path=stdout)
+        result = sandbox.run('test_stdout', stdout=stdout)
 
         with open(stdout) as f:
             self.assertEqual(f.read(), 'stdout message')
 
     def test_stderr(self):
         stderr = os.path.join(self.directory, 'stderr.txt')
-        result = sandbox.run('test_stderr', error_path=stderr)
+        result = sandbox.run('test_stderr', stderr=stderr)
 
         with open(stderr) as f:
             self.assertEqual(f.read(), 'stderr message')
@@ -55,7 +55,7 @@ class SandboxTest(unittest.TestCase):
         stdout = os.path.join(self.directory, 'stdout.txt')
         result = sandbox.run('test_output_limit',
             max_output_size=1048576,
-            output_path=stdout)
+            stdout=stdout)
         self.assertEqual(result["result"], sandbox.RESULT_RUNTIME_ERROR)
 
     def test_runtime_error(self):

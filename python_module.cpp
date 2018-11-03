@@ -13,11 +13,11 @@ SandboxConfig gen_defualt_config() {
   config.max_process_number = UNLIMITED;
   config.max_output_size = UNLIMITED;
   config.memory_check_only = false;
-  config.exe_path = nullptr;
-  config.input_path = nullptr;
-  config.output_path = nullptr;
-  config.error_path = nullptr;
-  config.chroot_path = nullptr;
+  config.target = nullptr;
+  config.stdin = nullptr;
+  config.stdout = nullptr;
+  config.stderr = nullptr;
+  config.chroot = nullptr;
   config.seccomp_rule = kNoneRule;
   config.uid = 0;
   config.gid = 0;
@@ -29,7 +29,7 @@ SandboxConfig gen_defualt_config() {
 
 static PyObject* sandbox_run(PyObject *self, PyObject *args, PyObject *keywds) {
   const char* kwlist[] = {
-    "exe_path",
+    "target",
     "max_cpu_time",
     "max_real_time",
     "max_memory",
@@ -37,10 +37,10 @@ static PyObject* sandbox_run(PyObject *self, PyObject *args, PyObject *keywds) {
     "max_process_number",
     "max_output_size",
     "memory_check_only",
-    "input_path",
-    "output_path",
-    "error_path",
-    "chroot_path",
+    "stdin",
+    "stdout",
+    "stderr",
+    "chroot",
     "args",
     "seccomp_rule",
     "uid",
@@ -54,7 +54,7 @@ static PyObject* sandbox_run(PyObject *self, PyObject *args, PyObject *keywds) {
 
   if (!PyArg_ParseTupleAndKeywords(args, keywds, "s|$IIIIIIpssssOIii",
       const_cast<char**>(kwlist),
-      &config.exe_path,
+      &config.target,
       &config.max_cpu_time,
       &config.max_real_time,
       &config.max_memory,
@@ -62,10 +62,10 @@ static PyObject* sandbox_run(PyObject *self, PyObject *args, PyObject *keywds) {
       &config.max_process_number,
       &config.max_output_size,
       &config.memory_check_only,
-      &config.input_path,
-      &config.output_path,
-      &config.error_path,
-      &config.chroot_path,
+      &config.stdin,
+      &config.stdout,
+      &config.stderr,
+      &config.chroot,
       &listObj,
       &rule,
       &config.uid,
@@ -73,7 +73,7 @@ static PyObject* sandbox_run(PyObject *self, PyObject *args, PyObject *keywds) {
     return NULL;
   }
 
-  config.args[0] = config.exe_path;
+  config.args[0] = config.target;
 
   if (listObj) {
     unsigned length = PyList_Size(listObj);
@@ -129,7 +129,7 @@ static PyMethodDef ExportMethods[] = {
 static PyModuleDef ModuleDef = {
   PyModuleDef_HEAD_INIT,
   "sandbox",
-  "Run application in sandbox",
+  "Run application in X sandbox",
   -1,
   ExportMethods
 };

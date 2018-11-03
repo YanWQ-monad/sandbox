@@ -30,12 +30,12 @@ struct SandboxConfig {
   unsigned max_process_number;
   unsigned max_output_size;
   bool memory_check_only;
-  const char *exe_path;
-  const char *input_path;
-  const char *output_path;
-  const char *error_path;
+  const char *target;
+  const char *stdin;
+  const char *stdout;
+  const char *stderr;
   const char *args[ARGS_MAX_NUMBER];
-  const char *chroot_path;
+  const char *chroot;
   SeccompRule seccomp_rule;
   uid_t uid;
   gid_t gid;

@@ -4,7 +4,7 @@
 
 #include "src/rules/rules.h"
 
-int rule_load_clike(const char *exe_path) {
+int rule_load_clike(const char *target) {
   prctl(PR_SET_NO_NEW_PRIVS, 1);
 
   constexpr static int syscalls_whitelist[] = {
@@ -23,7 +23,7 @@ int rule_load_clike(const char *exe_path) {
       return -1;
 
   if (seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(execve), 1,
-                       SCMP_A0(SCMP_CMP_EQ, (scmp_datum_t)(exe_path))))
+                       SCMP_A0(SCMP_CMP_EQ, (scmp_datum_t)(target))))
     return -1;
 
   if (seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(open), 1,

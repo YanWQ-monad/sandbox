@@ -64,23 +64,23 @@ void set_rlimits(const SandboxConfig &config) {
 void dup2_stdio(const SandboxConfig &config) {
   FILE *input, *output, *error;
 
-  if (config.input_path) {
-    input = fopen(config.input_path, "r");
+  if (config.stdin) {
+    input = fopen(config.stdin, "r");
     if (!input || dup2(fileno(input), fileno(stdin)) == -1)
       throw SandboxException(kDup2Failed, errno);
   }
 
-  if (config.output_path) {
-    output = fopen(config.output_path, "w");
+  if (config.stdout) {
+    output = fopen(config.stdout, "w");
     if (!output || dup2(fileno(output), fileno(stdout)) == -1)
       throw SandboxException(kDup2Failed, errno);
   }
 
-  if (config.error_path) {
-    if (config.output_path && !strcmp(config.output_path, config.error_path)) {
+  if (config.stderr) {
+    if (config.stdout && !strcmp(config.stdout, config.stderr)) {
       error = output;
     } else {
-      error = fopen(config.error_path, "w");
+      error = fopen(config.stderr, "w");
       if (!error)
         throw SandboxException(kDup2Failed, errno);
     }
@@ -90,7 +90,7 @@ void dup2_stdio(const SandboxConfig &config) {
 }
 
 void change_root(const SandboxConfig &config) {
-  if (config.chroot_path && chroot(config.chroot_path) == -1)
+  if (config.chroot && chroot(config.chroot) == -1)
     throw SandboxException(kChrootFailed, errno);
 }
 
@@ -111,7 +111,7 @@ void load_seccomp(const SandboxConfig &config) {
       break;
 
     case kClikeRule:
-      if (rule_load_clike(config.exe_path))
+      if (rule_load_clike(config.target))
         throw SandboxException(kLoadSeccompFailed, errno);
       break;
 
@@ -121,6 +121,6 @@ void load_seccomp(const SandboxConfig &config) {
 }
 
 void exec_process(const SandboxConfig &config) {
-  if (execve(config.exe_path, const_cast<char* const*>(config.args), nullptr))
+  if (execve(config.target, const_cast<char* const*>(config.args), nullptr))
     throw SandboxException(kExecveFailed, errno);
 }
